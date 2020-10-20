@@ -48,6 +48,10 @@ export abstract class BaseController {
         return this.jsonResponse(404, message? message : HttpMessages.msj.notFound)
     }
 
+    protected preconditionFailed(message?: string){
+        return this.jsonResponse(412, message? message : HttpMessages.msj.preconditionFailed)
+    }
+    
     protected fail(error: any | string){
         this.log(error);
         return this.res.status(500).json({

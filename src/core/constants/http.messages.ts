@@ -4,6 +4,7 @@ export class HttpMessages {
         badRequest: "Bad Request",
         unAuthorized: "No permission for perfom this action",
         forbidden: "Forbidden",
-        notFound: "Not fount"
+        notFound: "Not fount",
+        preconditionFailed: "Precondition Faild"
     }
 }

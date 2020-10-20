@@ -22,6 +22,8 @@ export class LoginUserController extends BaseController {
                         return this.notFound(error.errorValue().message)
                     case UserErrors.PasswordNotMatch:
                         return this.forbbiden(error.errorValue().message)
+                    case UserErrors.InvalidUser:
+                        return this.preconditionFailed(error.errorValue().message)
                     default:
                         return this.badRequest(error.ErrorValue())                        
                 }

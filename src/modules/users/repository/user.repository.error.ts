@@ -24,4 +24,12 @@ export namespace UserErrors {
             } as DomainError)
         }
     }
+
+    export class InvalidUser extends Result<DomainError> {
+        constructor(email: string){
+            super(false, {
+                message: `This ${email} is a invalid user name`
+            } as DomainError)
+        }
+    }
 }

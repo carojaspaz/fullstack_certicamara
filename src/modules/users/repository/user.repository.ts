@@ -11,6 +11,7 @@ type Response = Either<
     UserErrors.AccountAlreadExists | 
     UserErrors.AccountDoesNotExists |
     UserErrors.PasswordNotMatch |
+    UserErrors.InvalidUser |
     Result<any>,
     Result<void>>
 
@@ -20,7 +21,12 @@ export interface IUserRepo {
 }
 
 export class UserRepository implements IUserRepo {
-    login(userLogin: LoginUserDto): Promise<Response> {        
+    login(userLogin: LoginUserDto): Promise<Response> {    
+        if(!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(userLogin.email))){
+            return new Promise((resolve, reject) => {
+                resolve(left(new UserErrors.InvalidUser(userLogin.email)) as Response)
+            })
+        }    
         if(userLogin.email !== 'demo@yopmail.com'){
             return new Promise((resolve, reject) => {
                 resolve(left(new UserErrors.AccountDoesNotExists(userLogin.email)) as Response)
