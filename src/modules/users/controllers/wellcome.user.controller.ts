@@ -1,6 +1,10 @@
 import { BaseController } from '../../../core'
 
 export class WellcomeUserController extends BaseController {
+
+    constructor(){
+        super()
+    }
         
     protected executeImpl(): Promise<any> {
         try{

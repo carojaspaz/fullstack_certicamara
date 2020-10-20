@@ -1,18 +1,38 @@
 import { LoginUserDto } from '../dtos'
 
+// Error handleing
+import { Either, GenericAppError, Result, left, right } from '../../../core'
+import { UserErrors } from './user.repository.error'
+import { resolve } from 'path'
+
+type Response = Either<
+    GenericAppError.UnexpectedError |
+    GenericAppError.NotFoundError |
+    UserErrors.AccountAlreadExists | 
+    UserErrors.AccountDoesNotExists |
+    UserErrors.PasswordNotMatch |
+    Result<any>,
+    Result<void>>
+
+
 export interface IUserRepo {
-    login(userLogin: LoginUserDto): Promise<any>
+    login(userLogin: LoginUserDto): Promise<Response>
 }
 
 export class UserRepository implements IUserRepo {
-    login(userLogin: LoginUserDto): Promise<any> {
+    login(userLogin: LoginUserDto): Promise<Response> {        
+        if(userLogin.email !== 'demo@yopmail.com'){
+            return new Promise((resolve, reject) => {
+                resolve(left(new UserErrors.AccountDoesNotExists(userLogin.email)) as Response)
+            })
+        }
+        if(userLogin.password !== '123'){
+            return new Promise((resolve, reject) => {
+                resolve(left(new UserErrors.PasswordNotMatch()) as Response)
+            })
+        }
         return new Promise((resolve, reject) => {
-            if(userLogin.email === 'demo@yopmail.com' && userLogin.password === '123'){
-                resolve(true)            
-            } else {
-                resolve(false)
-            }            
-        })        
+            resolve(right(Result.ok<any>("Sesión iniciada")) as Response)
+        })
     }
-    
 }
