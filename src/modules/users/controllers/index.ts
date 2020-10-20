@@ -1,11 +1,13 @@
 import { WellcomeUserController } from './wellcome.user.controller'
 import { LoginUserController } from './login.user.controller'
-// Create Service
 
+// Create Service
+import { UserService } from '../services/user.service'
+const userService = new UserService()
 
 // Inject Service
 const wellcomeUserController = new WellcomeUserController()
-const loginUserController = new LoginUserController()
+const loginUserController = new LoginUserController(userService)
 
 // Export Controller
 export {

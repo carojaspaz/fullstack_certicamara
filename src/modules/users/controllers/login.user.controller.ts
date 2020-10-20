@@ -1,17 +1,22 @@
 import { BaseController } from '../../../core'
 
+import { IUserService, UserService } from '../services/user.service'
 import { LoginUserDto } from '../dtos'
 
 export class LoginUserController extends BaseController {
     
-    protected executeImpl(): Promise<any> {
-        try {
+    constructor(private readonly userService: IUserService){
+        super()
+    }
+
+    async executeImpl(): Promise<any> {
+        try {          
             const dto : LoginUserDto = this.req.body as LoginUserDto
-            if(dto.password === '123'){
-                return this.ok("Login acepted")
-            } else {
+            const result = await this.userService.login(dto)        
+            if(result)
+                return this.ok()
+            else
                 return this.forbbiden()
-            }
         } catch(error){
             return this.fail(error)
         }
