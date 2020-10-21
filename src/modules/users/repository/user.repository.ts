@@ -3,8 +3,6 @@ import { LoginUserDto } from '../dtos'
 // Error handleing
 import { Either, GenericAppError, Result, left, right } from '../../../core'
 import { UserErrors } from './user.repository.error'
-import { resolve } from 'path'
-
 type Response = Either<
     GenericAppError.UnexpectedError |
     GenericAppError.NotFoundError |
