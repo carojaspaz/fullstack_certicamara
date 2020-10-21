@@ -1,5 +1,8 @@
 import { Router } from 'express'
 
+// Middleware
+import { auth } from '../../../core'
+
 // Import Controllers
 import {
     wellcomeUserController,
@@ -8,7 +11,7 @@ import {
 
 const userRouter : Router = Router()
 
-userRouter.get('/user/wellcome/:name',
+userRouter.get('/user/wellcome/:name', auth,
     (req, res) => wellcomeUserController.execute(req, res))
 
 userRouter.post('/user',

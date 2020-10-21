@@ -3,6 +3,8 @@ import express from 'express'
 import { Config } from '../../config'
 import { router } from './api/v1';
 
+import { connectDb } from '../../core'
+
 let app = express()
 
 app.set('port', Config.port)
@@ -23,9 +25,15 @@ app.use(express.json())
 // Set router to express
 app.use('/api', router)
 
+// Init app
+connectDb().then(async () => {
+    app.listen(app.get('port'), () => 
+        console.log(`Api escuchando puerto ${app.get('port')}`)
+    )
+}).catch((e) => {
+    console.log(e)
+})
 
-app.listen(app.get('port'), () => 
-    console.log(`Api escuchando puerto ${app.get('port')}`)
-)
+
 
 export { app }
