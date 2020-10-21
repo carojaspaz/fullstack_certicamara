@@ -15,10 +15,30 @@ type Response = Either<
 
 
 export interface IUserRepo {
+    create(user: LoginUserDto): Promise<Response>
     login(userLogin: LoginUserDto): Promise<Response>
 }
 
 export class UserRepository implements IUserRepo {
+    
+    private models: any
+
+    constructor(models){
+        this.models = models
+    }
+
+    
+    
+    public async create(user: LoginUserDto): Promise<Response> {
+        const newUser = this.models.User;
+        try{
+            const id =  await newUser.schema.methods.CreateUSer(user)
+            return right(Result.ok<any>(id)) as Response
+        } catch(e){
+            return left(new GenericAppError.UnexpectedError(e)) as Response
+        }
+    }
+
     login(userLogin: LoginUserDto): Promise<Response> {    
         if(!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(userLogin.email))){
             return new Promise((resolve, reject) => {
