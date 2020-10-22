@@ -4,7 +4,7 @@ import { IUserService, UserService } from '../services/user.service'
 import { LoginUserDto } from '../dtos'
 import { UserErrors } from '../repository/user.repository.error'
 
-export class LoginUserController extends BaseController {
+export class CreateUserController extends BaseController {
     
     constructor(private readonly userService: IUserService){
         super()
@@ -13,7 +13,7 @@ export class LoginUserController extends BaseController {
     async executeImpl(): Promise<any> {
         try {          
             const dto : LoginUserDto = this.req.body as LoginUserDto
-            const result = await this.userService.login(dto) as any;      
+            const result = await this.userService.create(dto) as any;      
             if(result.isLeft()){
                 const error = result.value
                 switch(error.constructor){

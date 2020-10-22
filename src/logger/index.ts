@@ -4,7 +4,7 @@ var filename = __dirname + '/fullstack.log'
 
 const log = require('simple-node-logger').createSimpleLogger(filename)
 
-const writeLog = (msg, type) => {
+const writeLog = (msg: any, type: any) => {
     switch (type) {
         case logType.info:
             log.info(msg);

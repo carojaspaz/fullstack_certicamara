@@ -30,7 +30,7 @@ connectDb().then(async () => {
     app.listen(app.get('port'), () => 
         console.log(`Api escuchando puerto ${app.get('port')}`)
     )
-}).catch((e) => {
+}).catch((e: any) => {
     console.log(e)
 })
 

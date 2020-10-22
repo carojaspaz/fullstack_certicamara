@@ -12,7 +12,7 @@ const connectDb = () => {
         useFindAndModify: false,
         useUnifiedTopology: true
     })
-    .catch(error => console.log({
+    .catch((error:any) => console.log({
         description: "Error connection",
         stringConnection: Config.urlDatabase,
         error: error

@@ -24,6 +24,8 @@ const userSchema = new mongose.Schema({
 userSchema.pre('save', true, async function(next, done){
     const user = this
     if(user.isNew){
+        //TODO: Validar que el usuario no esté registrado
+        
         if(!(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(user.get('password')))){
             user.invalidate('password', 'La constaseña no cumple con los requerimientos minimos de seguridad')
             done(new Error('Contraseña invalida'))

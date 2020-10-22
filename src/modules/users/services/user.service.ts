@@ -4,10 +4,14 @@ import { userRepository } from '../repository'
 
 export interface IUserService {
     login(userLogin: LoginUserDto): Promise<any>
+    create(user: LoginUserDto): Promise<any>
 }
 
 export class UserService implements IUserService{
     login(userLogin: LoginUserDto): Promise<any> {
         return userRepository.login(userLogin)
+    }    
+    create(user: LoginUserDto): Promise<any> {
+        return userRepository.create(user)
     }    
 }

@@ -1,3 +1,9 @@
+import * as bcrypt from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
+
+import moment = require('moment')
+
+import { Config } from '../../../config'
 import { LoginUserDto } from '../dtos'
 
 // Error handleing
@@ -32,31 +38,45 @@ export class UserRepository implements IUserRepo {
     public async create(user: LoginUserDto): Promise<Response> {
         const newUser = this.models.User;
         try{
-            const id =  await newUser.schema.methods.CreateUSer(user)
+            const id =  await newUser.schema.methods.CreateUser(user)
             return right(Result.ok<any>(id)) as Response
         } catch(e){
             return left(new GenericAppError.UnexpectedError(e)) as Response
         }
     }
 
-    login(userLogin: LoginUserDto): Promise<Response> {    
-        if(!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(userLogin.email))){
-            return new Promise((resolve, reject) => {
-                resolve(left(new UserErrors.InvalidUser(userLogin.email)) as Response)
-            })
-        }    
-        if(userLogin.email !== 'demo@yopmail.com'){
-            return new Promise((resolve, reject) => {
-                resolve(left(new UserErrors.AccountDoesNotExists(userLogin.email)) as Response)
-            })
+    async login(userLogin: LoginUserDto): Promise<Response> {    
+        try{
+            const exist = await this.exists(userLogin.email)
+            if(exist){
+                return this.getToken(userLogin)
+            } else {
+                return left(new UserErrors.AccountDoesNotExists(userLogin.email)) as Response
+            }
+        } catch(e){
+            return left(new GenericAppError.UnexpectedError(e)) as Response
         }
-        if(userLogin.password !== '123'){
-            return new Promise((resolve, reject) => {
-                resolve(left(new UserErrors.PasswordNotMatch()) as Response)
-            })
+    }
+
+    private async exists(email): Promise<boolean> {
+        var query = { email: { $regex: new RegExp(`^${email.toLowerCase()}`,'i')} }
+        const user = await this.models.User.findOne(query)
+        return !!user === true
+    }
+
+    private async getToken(userLogin: LoginUserDto) : Promise<Response>{
+        var query = { email: { $regex: new RegExp(`^${userLogin.email.toLowerCase()}`,'i')} }
+        const user = await this.models.User.findOne(query)
+        const isPaswordMatch = await bcrypt.compare(userLogin.password, user['password'])
+        if(isPaswordMatch){
+            const expirationDate = moment(Date.now()).add(5,'m')
+            const token = jwt.sign({
+                email: userLogin.email,
+                expirationDate: expirationDate            
+            }, Config.jwtSecret)
+            return right(Result.ok<any>({token: token})) as Response
+        } else {
+            return left(new UserErrors.PasswordNotMatch()) as Response
         }
-        return new Promise((resolve, reject) => {
-            resolve(right(Result.ok<any>("Sesión iniciada")) as Response)
-        })
     }
 }
