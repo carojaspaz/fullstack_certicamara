@@ -7,7 +7,9 @@ import { auth } from '../../../core'
 import {
     wellcomeUserController,
     loginUserController,
-    createUserController
+    createUserController,
+    changePasswordUserController,
+    toggleActiveUserController
 } from '../controllers'
 
 const userRouter : Router = Router()
@@ -20,5 +22,11 @@ userRouter.post('/user',
 
 userRouter.post('/user/create',
     (req, res) => createUserController.execute(req, res))
+
+userRouter.put('/user/changePassword', auth,
+    (req, res) => changePasswordUserController.execute(req, res))
+
+userRouter.put('/user/toggleActive', auth,
+    (req, res) => toggleActiveUserController.execute(req, res))
 
 export { userRouter }

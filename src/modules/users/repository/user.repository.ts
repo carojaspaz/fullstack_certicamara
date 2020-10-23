@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken'
 import moment = require('moment')
 
 import { Config } from '../../../config'
-import { LoginUserDto } from '../dtos'
+import { LoginUserDto, ChangePasswordUserDto } from '../dtos'
 
 // Error handleing
 import { Either, GenericAppError, Result, left, right } from '../../../core'
@@ -23,6 +23,8 @@ type Response = Either<
 export interface IUserRepo {
     create(user: LoginUserDto): Promise<Response>
     login(userLogin: LoginUserDto): Promise<Response>
+    toggle(email: string): Promise<Response>
+    changePassword(changePassword: ChangePasswordUserDto): Promise<Response>
 }
 
 export class UserRepository implements IUserRepo {
@@ -33,7 +35,27 @@ export class UserRepository implements IUserRepo {
         this.models = models
     }
 
+    public async changePassword(changePassword: ChangePasswordUserDto): Promise<Response> {
+        try{
+            var query = { email: { $regex: new RegExp(`^${changePassword.email.toLowerCase()}`,'i')}  }
+            const user = await this.models.User.findOne(query)
+            await user.schema.methods.ChangePassword(changePassword.email, changePassword.newPassword)            
+            return right(Result.ok<any>()) as Response                
+        } catch(error) {
+            return left(new GenericAppError.UnexpectedError(error)) as Response
+        }  
+    }
     
+    public async toggle(email: string): Promise<Response> {
+        try{
+            var query = { email: { $regex: new RegExp(`^${email.toLowerCase()}`,'i')}  }
+            const user = await this.models.User.findOne(query)
+            await user.schema.methods.ToggleActive(email)
+            return right(Result.ok<any>()) as Response                
+        } catch(error) {
+            return left(new GenericAppError.UnexpectedError(error)) as Response
+        }  
+    }    
     
     public async create(user: LoginUserDto): Promise<Response> {
         const newUser = this.models.User;

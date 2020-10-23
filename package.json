@@ -20,6 +20,7 @@
     "@types/express": "^4.17.8",
     "@types/mongoose": "^5.7.36",
     "bcrypt": "^5.0.0",
+    "cqrs-domain": "^2.14.79",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
