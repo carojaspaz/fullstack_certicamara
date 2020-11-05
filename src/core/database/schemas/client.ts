@@ -5,6 +5,9 @@ import validator from 'validator'
 import { documentType, phoneType, addressType, productType } from '../customTypes'
 
 const clientSchema = new mongoose.Schema({
+    urlPicture: {
+        type: String        
+    },
     name: {
         type: String,
         required: [true, 'Nombre requerido'],
