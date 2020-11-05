@@ -1,1 +1,1 @@
-export * from './logTypeEnum'
+export * from './document.enum'

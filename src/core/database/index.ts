@@ -4,6 +4,7 @@ import { Config } from '../../config'
 
 // Models
 import { User } from './schemas/user'
+import { Client } from './schemas/client'
 
 const connectDb = () => {
     return Mongoose.connect(`${Config.urlDatabase}`, {
@@ -20,7 +21,8 @@ const connectDb = () => {
 }
 
 const models = {
-    User
+    User,
+    Client
 }
 
 export { connectDb, models }
