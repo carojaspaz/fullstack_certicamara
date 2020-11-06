@@ -1,11 +1,12 @@
 import * as express from 'express'
 
-import { userRouter } from '../../../modules'
+import { userRouter, clientRouter } from '../../../modules'
 
 const router = express.Router()
 
 router.use('/v1',
-    userRouter
+    userRouter,
+    clientRouter
 )
 
 export { router }
